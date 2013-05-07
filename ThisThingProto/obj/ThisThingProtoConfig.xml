@@ -16,7 +16,7 @@
     </define>
     <define append="true">
       <name>CONFIG::timeStamp</name>
-      <value>'5/6/2013'</value>
+      <value>'5/7/2013'</value>
     </define>
     <define append="true">
       <name>CONFIG::air</name>
@@ -39,10 +39,10 @@
   <file-specs>
     <path-element>C:\Users\adidasy\Dev\flash\ThisThingProto\src\Main.as</path-element>
   </file-specs>
-  <default-background-color>#FFFFFF</default-background-color>
-  <default-frame-rate>30</default-frame-rate>
+  <default-background-color>#202020</default-background-color>
+  <default-frame-rate>60</default-frame-rate>
   <default-size>
-    <width>800</width>
-    <height>600</height>
+    <width>640</width>
+    <height>480</height>
   </default-size>
 </flex-config>

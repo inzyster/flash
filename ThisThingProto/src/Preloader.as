@@ -6,6 +6,7 @@ package
 	import flash.accessibility.Accessibility;
 	import flash.display.Bitmap;
 	import flash.display.DisplayObject;
+	import flash.display.InteractiveObject;
 	import flash.display.MovieClip;
 	import flash.display.Shape;
 	import flash.display.StageAlign;
@@ -14,6 +15,7 @@ package
 	import flash.events.IOErrorEvent;
 	import flash.events.ProgressEvent;
 	import flash.events.TimerEvent;	
+	import flash.external.ExternalInterface;
 	import flash.utils.getDefinitionByName;
 	import flash.utils.Timer;
 	/**
@@ -30,9 +32,26 @@ package
 		
 		private var _timer:Timer = new Timer(500);
 		private var _fade:TweenMax;
+				
+		private var _xOffset:Number;
+		private var _yOffset:Number;
 		
 		public function Preloader():void
 		{
+			if (ExternalInterface.available)
+			{
+				ExternalInterface.call("Flash.onFlashLoaded", true);
+			}						
+			
+			var params:Object = this.root.loaderInfo.parameters;
+			if (("containerWidth" in params) && ("containerHeight" in params))
+			{
+				Config.setContainerSize(params["containerWidth"], params["containerHeight"]);
+			}
+
+			_xOffset = (Config.ContainerWidth - Config.Width) / 2.0;
+			_yOffset = (Config.ContainerHeight - Config.Height) / 2.0;
+			
 			if (this.stage) 
 			{
 				this.stage.scaleMode = StageScaleMode.NO_SCALE;
@@ -45,15 +64,15 @@ package
 
 			background.graphics.lineStyle(0);			
 			background.graphics.beginFill(Config.DefaultBackground);
-			background.graphics.drawRect(0, 0, Config.Width, Config.Height);
+			background.graphics.drawRect(_xOffset, _yOffset, Config.Width, Config.Height);
 			background.graphics.endFill();
 			
 			this.addChild(background);
 			
 			_logo = new LOGO() as Bitmap;
 			
-			_logo.x = (Config.Width - _logo.width) / 2.0;
-			_logo.y = (Config.Height - _logo.height) / 2.0;			
+			_logo.x = ((Config.Width - _logo.width) / 2.0) + _xOffset;
+			_logo.y = ((Config.Height - _logo.height) / 2.0) + _yOffset;
 			
 			this.addChild(_logo);
 			_logo.alpha = 0.0;
@@ -64,6 +83,7 @@ package
 			
 			_timer.repeatCount = 1;
 			_timer.addEventListener(TimerEvent.TIMER_COMPLETE, onTimerFinished);
+			
 		}
 		
 		private function onIOError(e:IOErrorEvent):void
@@ -107,6 +127,9 @@ package
 			
 			_fade = new TweenMax(main, 1, { alpha: 1.0 } );
 			_fade.addEventListener(TweenEvent.COMPLETE, onTweenComplete);
+			
+			main.x = _xOffset;
+			main.y = _yOffset;
 			
 			this.addChild(main);
 		}

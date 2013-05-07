@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8"/>
+	<title>ThisThingProto</title>
+	<meta name="description" content="" />
+	
+	<script src="js/swfobject.js" type="text/javascript"></script>
+	<script type="text/javascript">
+
+	(function() {
+		"use strict";
+		
+		var Flash = {};
+		Flash.getSize = function() {
+			return {
+				width: "100%",
+				height: "100%"
+			};
+		};
+		Flash.getFlashvars = function() {
+			var s = Flash.getSize();
+			var w = s.width;
+			var h = s.height;
+			var getValue = function(input, refVal) {
+				var result = 0;
+				if (input.indexOf("%") >= 0)
+				{
+					input = input.substr(0, input.indexOf("%"));
+					result = refVal * (eval(input) / 100);
+				}
+				else if (input.indexOf("px") >= 0)
+				{
+					input = input.substr(0, input.indexOf("px"));
+					result = eval(input);
+				}
+				else 
+				{
+					result = eval(input);
+				}
+				return result;
+			};
+			var res = {
+				width: getValue(w, document.body.clientWidth || document.body.offsetWidth),
+				height: getValue(h, document.body.clientHeight || document.body.offsetHeight)
+			};
+			return {
+				containerWidth: res.width,
+				containerHeight: res.height
+			};
+		};
+		Flash.getParams = function() {
+			return {
+				menu: "false",
+				scale: "noScale",
+				allowFullscreen: "true",
+				allowScriptAccess: "always",
+				bgcolor: "",
+				wmode: "direct" // can cause issues with FP settings & webcam
+			};
+		};
+		Flash.getAttributes = function() {
+			return {
+				id:"ThisThingProto"
+			};
+		};
+		
+		Flash.log = function() {
+			if (!window.console)
+			{
+				return;
+			}
+			var args = [].slice.call(arguments);
+			console.log.apply(console, args);
+		};
+		
+		Flash.onFlashLoaded = function(loaded) {
+			if (!!loaded)
+			{
+			}
+		};
+		
+		window.Flash = Flash;
+		
+	}());
+	</script>
+	<style>
+		html, body { height:100%; overflow:hidden; }
+		body { width: 100%; margin:0; }
+	</style>
+</head>
+<body>
+	<div id="altContent">
+		<h1>ThisThingProto</h1>
+		<p><a href="http://www.adobe.com/go/getflashplayer">Get Adobe Flash player</a></p>
+	</div>
+	<script type="text/javascript">
+	var s = Flash.getSize();
+		swfobject.embedSWF(
+			"ThisThingProto.swf", 
+			"altContent", s.width, s.height, "10.0.0", 
+			"expressInstall.swf", 
+			Flash.getFlashvars(), Flash.getParams(), Flash.getAttributes());
+	</script>
+</body>
+</html>

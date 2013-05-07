@@ -1,6 +1,8 @@
 package  
 {
+	import flash.external.ExternalInterface;
 	import flash.system.Capabilities;
+	import flash.system.Security;
 	/**
 	 * ...
 	 * @author Tomasz Chodakowski
@@ -11,6 +13,9 @@ package
 		private static var _Width:int;
 		private static var _Height:int;
 		private static var _RefreshRate:int;
+		
+		private static var _ContainerWidth:int;
+		private static var _ContainerHeight:int;
 		
 		private static var _DefaultBackground:uint;
 		
@@ -29,13 +34,29 @@ package
 			return _RefreshRate;
 		}
 		
+		public static function get ContainerWidth():int 
+		{
+			return _ContainerWidth;
+		}
+		
+		public static function get ContainerHeight():int 
+		{
+			return _ContainerHeight;
+		}
+		
 		public static function get DefaultBackground():uint
 		{
 			return _DefaultBackground;
 		}
 		
-		// static initializer, apparently
+		public static function setContainerSize(width:int, height:int):void
 		{
+			_ContainerWidth = width;
+			_ContainerHeight = height;
+		}
+		
+		// static initializer, apparently
+		{		
 			if (CONFIG::desktop == true)
 			{
 				_Width = Capabilities.screenResolutionX;
@@ -45,6 +66,16 @@ package
 			{
 				_Width = 640;
 				_Height = 480;
+			}
+			
+			if (ExternalInterface.available)
+			{
+				
+			}
+			else 
+			{
+				_ContainerWidth = _Width;
+				_ContainerHeight = _Height;
 			}
 			_RefreshRate = 60;
 			_DefaultBackground = 0x202020;
