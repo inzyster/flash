@@ -120,25 +120,35 @@ package
 			var mainClass:Class = getDefinitionByName("Main") as Class;
 			var main:DisplayObject = new mainClass() as DisplayObject;			
 			
-			this.removeChild(_logo);
-			_logo = null;
-			
 			main.alpha = 0.0;
-			
-			_fade = new TweenMax(main, 1, { alpha: 1.0 } );
-			_fade.addEventListener(TweenEvent.COMPLETE, onTweenComplete);
-			
+						
 			main.x = _xOffset;
 			main.y = _yOffset;
 			
 			this.addChild(main);
-		}
-		
-		private function onTweenComplete(e:TweenEvent):void 
-		{
-			_fade.removeEventListener(TweenEvent.COMPLETE, onTweenComplete);
-			_fade = null;
-		}
+			
+			var self:* = this;
+			
+			TweenManager.chain( {
+					target: _logo,
+					duration: 0.5,
+					vars: {
+						alpha: 0.0
+					},
+					onFinished: function():void {
+						self.removeChild(_logo);
+						_logo = null;
+					}
+				}, {
+					target: main,
+					duration: 0.5,
+					vars: {
+						alpha: 1.0
+					}
+				}
+			);
+			
+		}		
 		
 	}
 
