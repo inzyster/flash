@@ -8,6 +8,7 @@ package
 	import flash.display.DisplayObject;
 	import flash.display.InteractiveObject;
 	import flash.display.MovieClip;
+	import flash.display.Shader;
 	import flash.display.Shape;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
@@ -16,6 +17,8 @@ package
 	import flash.events.ProgressEvent;
 	import flash.events.TimerEvent;	
 	import flash.external.ExternalInterface;
+	import flash.filters.ShaderFilter;
+	import flash.utils.ByteArray;
 	import flash.utils.getDefinitionByName;
 	import flash.utils.Timer;
 	/**
@@ -30,11 +33,19 @@ package
 		
 		private var _logo:Bitmap;
 		
+		private var _maxLogoWidth:Number;
+		
 		private var _timer:Timer = new Timer(500);
 		private var _fade:TweenMax;
 				
 		private var _xOffset:Number;
 		private var _yOffset:Number;
+		
+		[Embed(source = "../res/posterize.pbj", mimeType = "application/octet-stream")]
+		private var POSTERIZE:Class;
+		
+		[Embed(source = "../res/warp.pbj", mimeType = "application/octet-stream")]
+		private var WARP:Class;
 		
 		public function Preloader():void
 		{
@@ -60,6 +71,16 @@ package
 			
 			this.opaqueBackground = Config.DefaultBackground;
 			
+			var posterizeShader:Shader = new Shader(new POSTERIZE());
+			var posterizeFilter:ShaderFilter = new ShaderFilter(posterizeShader);
+			
+			var warpShader:Shader = new Shader(new WARP());
+			warpShader.data["amount"].value = [0.2];
+			warpShader.data["inputSize"].value = [Config.Width, Config.Height];
+			var warpFilter:ShaderFilter = new ShaderFilter(warpShader);
+			
+			this.filters = [warpFilter, posterizeFilter];
+			
 			var background:Shape = new Shape();
 
 			background.graphics.lineStyle(0);			
@@ -73,9 +94,11 @@ package
 			
 			_logo.x = ((Config.Width - _logo.width) / 2.0) + _xOffset;
 			_logo.y = ((Config.Height - _logo.height) / 2.0) + _yOffset;
+			_maxLogoWidth = _logo.width;
 			
 			this.addChild(_logo);
-			_logo.alpha = 0.0;
+			
+			_logo.width = 0.0;			
 			
 			this.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 			this.loaderInfo.addEventListener(ProgressEvent.PROGRESS, onProgress);
@@ -93,7 +116,7 @@ package
 		
 		private function onProgress(e:ProgressEvent):void 
 		{
-			_logo.alpha = ((this.loaderInfo.bytesLoaded as Number) / (this.loaderInfo.bytesTotal as Number));
+			_logo.width = ((this.loaderInfo.bytesLoaded as Number) / (this.loaderInfo.bytesTotal as Number)) * _maxLogoWidth;
 		}
 		
 		private function onEnterFrame(e:Event):void 
@@ -119,35 +142,14 @@ package
 		{
 			var mainClass:Class = getDefinitionByName("Main") as Class;
 			var main:DisplayObject = new mainClass() as DisplayObject;			
-			
-			main.alpha = 0.0;
-						
+
+			this.removeChild(_logo);
+							
 			main.x = _xOffset;
 			main.y = _yOffset;
 			
 			this.addChild(main);
-			
-			var self:* = this;
-			
-			TweenManager.chain( {
-					target: _logo,
-					duration: 0.5,
-					vars: {
-						alpha: 0.0
-					},
-					onFinished: function():void {
-						self.removeChild(_logo);
-						_logo = null;
-					}
-				}, {
-					target: main,
-					duration: 0.5,
-					vars: {
-						alpha: 1.0
-					}
-				}
-			);
-			
+						
 		}		
 		
 	}

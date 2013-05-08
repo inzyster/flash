@@ -10,6 +10,9 @@ package
 	public class Config 
 	{
 
+		[Embed(source = "../res/amstrad_cpc464.ttf", embedAsCFF = "false", fontFamily = "cpc")]
+		private static var FONT_CPC:Class;
+		
 		private static var _Width:int;
 		private static var _Height:int;
 		private static var _RefreshRate:int;
@@ -18,7 +21,7 @@ package
 		private static var _ContainerHeight:int;
 		
 		private static var _DefaultBackground:uint;
-		
+				
 		public static function get Width():int
 		{
 			return _Width;
