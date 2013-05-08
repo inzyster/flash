@@ -72,6 +72,7 @@ package
 			this.opaqueBackground = Config.DefaultBackground;
 			
 			var posterizeShader:Shader = new Shader(new POSTERIZE());
+			posterizeShader.data["limits"].value = [16];
 			var posterizeFilter:ShaderFilter = new ShaderFilter(posterizeShader);
 			
 			var warpShader:Shader = new Shader(new WARP());
@@ -98,7 +99,7 @@ package
 			
 			this.addChild(_logo);
 			
-			_logo.width = 0.0;			
+			_logo.alpha = 0.0;			
 			
 			this.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 			this.loaderInfo.addEventListener(ProgressEvent.PROGRESS, onProgress);
@@ -116,7 +117,7 @@ package
 		
 		private function onProgress(e:ProgressEvent):void 
 		{
-			_logo.width = ((this.loaderInfo.bytesLoaded as Number) / (this.loaderInfo.bytesTotal as Number)) * _maxLogoWidth;
+			_logo.alpha = ((this.loaderInfo.bytesLoaded as Number) / (this.loaderInfo.bytesTotal as Number));
 		}
 		
 		private function onEnterFrame(e:Event):void 
@@ -143,13 +144,42 @@ package
 			var mainClass:Class = getDefinitionByName("Main") as Class;
 			var main:DisplayObject = new mainClass() as DisplayObject;			
 
-			this.removeChild(_logo);
+/*			this.removeChild(_logo);
 							
 			main.x = _xOffset;
 			main.y = _yOffset;
 			
 			this.addChild(main);
+*/			
+			
+			main.alpha = 0.0;
 						
+			main.x = _xOffset;
+			main.y = _yOffset;
+			
+			this.addChild(main);
+			
+			var self:* = this;
+			
+			TweenManager.chain( {
+					target: _logo,
+					duration: 0.5,
+					vars: {
+						alpha: 0.0
+					},
+					onFinished: function():void {
+						self.removeChild(_logo);
+						_logo = null;
+					}
+				}, {
+					target: main,
+					duration: 0.5,
+					vars: {
+						alpha: 1.0
+					}
+				}
+			);			
+			
 		}		
 		
 	}

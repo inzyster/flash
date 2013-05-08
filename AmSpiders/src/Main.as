@@ -19,10 +19,6 @@ package
 		public function Main():void 
 		{
 			super(Config.Width, Config.Height, Config.RefreshRate, false);
-			if (CONFIG::debug == true)
-			{
-				FP.console.enable();
-			}
 		}
 		
 		override public function init():void
@@ -30,6 +26,11 @@ package
 			FP.world = new MainWorld();
 			FP.screen.color = Config.DefaultBackground;
 			FP.screen.scale = 1;
+
+			if (CONFIG::debug == true)
+			{
+				FP.console.enable();
+			}			
 		}
 		
 		override public function update():void 
