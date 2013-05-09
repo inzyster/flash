@@ -1,5 +1,8 @@
 package  
 {
+	import flash.geom.Point;
+	import net.flashpunk.graphics.Image;
+	import net.flashpunk.graphics.Spritemap;
 	import net.flashpunk.graphics.Text;
 	import net.flashpunk.World;
 	/**
@@ -8,93 +11,57 @@ package
 	 */
 	public class MainWorld extends World
 	{
+				
+		private static const COLUMNS:int = 40;
+		private static const ROWS:int = 30;
 		
-		private var _text:Text;
+		private static var _columnWidth:int = 0;
+		private static var _columnHeight:int = 0;
 		
-		private var _textBuffer:StringBuffer;
+		{
+			_columnWidth = Config.Width / COLUMNS;
+			_columnHeight = Config.Height / ROWS;
+		}
 		
-		private const COLUMNS:int = 40;
-		private const ROWS:int = 30;
+		public static function GetWorldPoint(point:Point):Point
+		{
+			var column:Number = Math.floor(point.x / _columnWidth);
+			var row:Number = Math.floor(point.y / _columnHeight);
+			
+			return new Point(column * _columnWidth, row * _columnHeight);
+		}
 		
 		public function MainWorld() 
 		{
-			this._text = new Text("", 0, 0, { 
-				font: "cpc",
-				size: 20,
-				align: "left",
-				wordWrap: false,
-				resizable: true,
-				color: 0xffffffff,
-				width: Config.Width,
-				height: Config.Height
-			});
-			
-			this._textBuffer = new StringBuffer();
+
 		}
 		
 		override public function begin():void 
 		{
 			super.begin();
+
+/*			var t:TextMap = new TextMap(3, 0xffffffff,
+			"  ",	"     B",	" C",
+			" A",	"  BBbB",	"   c",
+			"  a",	" BBB  ",	" CC");
 			
-			this.addGraphic(_text);			
+			var s:Spritemap = new Spritemap(t.bitmapData, t.frameWidth, t.frameHeight);
+			s.add("stopped", [0]);
+			s.add("default", [0, 1, 2], 20, true);
 			
-			this._clearBuffer();
-		}
-		
-		private function _clearBuffer():void 
-		{
-			this._textBuffer.clear();
-			for (var i:int = 0; i < ROWS; i++)
-			{
-				for (var j:int = 0; j < COLUMNS; j++)
-				{
-					this._textBuffer.add(" "/*((j == 0 ? i : j) % 10).toString()*/);
-				}
-				this._textBuffer.add("\n");
-			}
+			var p:Point = GetWorldPoint(new Point(21, 134));
+			s.x = p.x;
+			s.y = p.y;
+			
+			this.addGraphic(s);
+			s.play("default");*/
 		}
 		
 		override public function update():void 
 		{
-			super.update();			
-			
-			var bufferText:String = this._textBuffer.toString();
-			
-			if (bufferText != null)
-			{			
-				this._text.text = bufferText;				
-			}
+			super.update();						
 		}
-		
-		private function _writeAt(column:int, row:int, text:String):void
-		{
-			var index:int = column + (row * COLUMNS);
-			var idx:int = index;
-			var c:int = 0;
-			var r:int = 0;
-			var buffIndex:int = idx;
-			for (var i:int = 0; i < text.length; i++)
-			{								
-				var s:String = text.charAt(i);
-				if (s == "\n")
-				{
-					idx = index + COLUMNS;
-					continue;
-				}
 				
-				r = Math.floor(idx / COLUMNS);
-				c = idx % COLUMNS;
-				
-				if (!(r < 0 || c < 0 || r >= ROWS || c >= COLUMNS))
-				{
-					buffIndex = c + (r * (COLUMNS + 1));
-					this._textBuffer.set(s, buffIndex);
-				}
-				
-				idx++;
-			}
-		}
-		
 	}
 
 }

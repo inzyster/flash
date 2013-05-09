@@ -22,6 +22,8 @@ package
 		
 		private static var _DefaultBackground:uint;
 				
+		private static var _FontSize:int;
+		
 		public static function get Width():int
 		{
 			return _Width;
@@ -50,6 +52,11 @@ package
 		public static function get DefaultBackground():uint
 		{
 			return _DefaultBackground;
+		}
+		
+		public static function get FontSize():int 
+		{
+			return 20;
 		}
 		
 		public static function setContainerSize(width:int, height:int):void
