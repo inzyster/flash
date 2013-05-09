@@ -23,12 +23,12 @@ package
 			_columnHeight = Config.Height / ROWS;
 		}
 		
-		public static function GetWorldPoint(point:Point):Point
+		public function getWorldPoint(point:Point, trackCamera:Boolean = false):Point
 		{
 			var column:Number = Math.floor(point.x / _columnWidth);
 			var row:Number = Math.floor(point.y / _columnHeight);
 			
-			return new Point(column * _columnWidth, row * _columnHeight);
+			return new Point((column * _columnWidth) + (trackCamera ? this.camera.x : 0), (row * _columnHeight) + (trackCamera ? this.camera.y : 0));
 		}
 		
 		public function MainWorld() 
@@ -40,21 +40,6 @@ package
 		{
 			super.begin();
 
-/*			var t:TextMap = new TextMap(3, 0xffffffff,
-			"  ",	"     B",	" C",
-			" A",	"  BBbB",	"   c",
-			"  a",	" BBB  ",	" CC");
-			
-			var s:Spritemap = new Spritemap(t.bitmapData, t.frameWidth, t.frameHeight);
-			s.add("stopped", [0]);
-			s.add("default", [0, 1, 2], 20, true);
-			
-			var p:Point = GetWorldPoint(new Point(21, 134));
-			s.x = p.x;
-			s.y = p.y;
-			
-			this.addGraphic(s);
-			s.play("default");*/
 		}
 		
 		override public function update():void 

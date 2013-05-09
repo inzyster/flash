@@ -21,6 +21,7 @@ package
 	import flash.utils.ByteArray;
 	import flash.utils.getDefinitionByName;
 	import flash.utils.Timer;
+	import punk.fx.graphics.FXImage;
 	/**
 	 * ...
 	 * @author Tomasz Chodakowski
@@ -80,7 +81,7 @@ package
 			warpShader.data["inputSize"].value = [Config.Width, Config.Height];
 			var warpFilter:ShaderFilter = new ShaderFilter(warpShader);
 			
-			this.filters = [warpFilter, posterizeFilter];
+			this.filters = [warpFilter, posterizeFilter];			
 			
 			var background:Shape = new Shape();
 
