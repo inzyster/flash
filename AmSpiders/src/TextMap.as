@@ -17,7 +17,7 @@ package
 		public var frameHeight:Number = 0.0;
 		public var frameCount:int = 0;
 		
-		public function TextMap(rowsPerFrame:int = 1, color:uint = 0xffffffff, ...frames):void 
+		public function TextMap(rowsPerFrame:int = 1, color:uint = 0xffffffff, addEmptyFrame:Boolean = true, ...frames):void 
 		{
 			if (frames.length == 0)
 			{
@@ -55,13 +55,23 @@ package
 					f = f.concat(self._generateSpaces(columnsPerFrame - f.length));
 				}
 				textBuffer.add(f);
-				if ((index + 1) % self.frameCount == 0 && ((index + 1) < self.frameCount))
+				
+				if ((index + 1) % self.frameCount == 0)
 				{
-					textBuffer.add("\n");
+					if (addEmptyFrame)
+					{
+						textBuffer.add(self._generateSpaces(columnsPerFrame));
+					}
+					if ((index + 1) < self.frameCount)
+					{
+						textBuffer.add("\n");
+					}
 				}
 			});
 			
 			text.text = textBuffer.toString();			
+			
+			this.frameCount += (addEmptyFrame ? 1 : 0);
 			
 			this.bitmapData = new BitmapData(text.textWidth, text.textHeight, true, 0x0);
 			text.render(this.bitmapData, new Point(0, 0), new Point(0, 0));

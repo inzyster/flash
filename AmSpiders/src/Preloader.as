@@ -50,7 +50,7 @@ package
 		
 		public function Preloader():void
 		{
-			if (ExternalInterface.available)
+			if (ExternalInterface.available && false)
 			{
 				ExternalInterface.call("Flash.onFlashLoaded", true);
 			}						

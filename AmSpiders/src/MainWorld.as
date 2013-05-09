@@ -5,6 +5,9 @@ package
 	import net.flashpunk.graphics.Spritemap;
 	import net.flashpunk.graphics.Text;
 	import net.flashpunk.World;
+	import punk.fx.effects.ScanLinesFX;
+	import punk.fx.FXMan;
+	import punk.fx.graphics.FXImage;
 	/**
 	 * ...
 	 * @author Tomasz Chodakowski
@@ -23,6 +26,8 @@ package
 			_columnHeight = Config.Height / ROWS;
 		}
 		
+		private static var _fxImage:FXImage;
+		
 		public function getWorldPoint(point:Point, trackCamera:Boolean = false):Point
 		{
 			var column:Number = Math.floor(point.x / _columnWidth);
@@ -33,20 +38,34 @@ package
 		
 		public function MainWorld() 
 		{
-
+			
 		}
 		
-		override public function begin():void 
+		override public function begin():void
 		{
 			super.begin();
-
+			_fxImage = new FXImage();
+			_fxImage.name = "FXScreen";
+			
+			var scanlines:ScanLinesFX = new ScanLinesFX(true);
+			scanlines.scanLinesGap = 4.0;
+			scanlines.scanLinesThickness = 1.0;
+			scanlines.noiseSeed = -1;
+			scanlines.scanLinesOffset = 0.0;
+			scanlines.noiseAmount = 5.0;
+			FXMan.add(_fxImage, scanlines);
+			
+			this.addGraphic(_fxImage, -3);
 		}
 		
-		override public function update():void 
+		
+		override public function end():void
 		{
-			super.update();						
+			super.end();
+			FXMan.removeTargets(_fxImage);
+			_fxImage = null;
 		}
-				
+		
 	}
 
 }
