@@ -7,12 +7,16 @@ package stages
 	import net.flashpunk.FP;
 	import net.flashpunk.graphics.Image;
 	import net.flashpunk.graphics.Stamp;
+	import net.flashpunk.utils.Input;
+	import net.flashpunk.utils.Key;
 	/**
 	 * ...
 	 * @author Tomasz Chodakowski
 	 */
 	public class TitleScreen extends MainWorld
 	{
+		
+		private var _willExit:Boolean = false;
 		
 		public function TitleScreen() 
 		{
@@ -55,6 +59,17 @@ package stages
 		override public function update():void
 		{
 			super.update();
+			
+			if (_willExit)
+			{
+				return;
+			}
+			
+			if (Input.pressed(Key.SPACE))
+			{
+				_willExit = true;
+				FP.world = new Level();
+			}
 		}
 		
 	}

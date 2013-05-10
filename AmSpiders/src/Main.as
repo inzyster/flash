@@ -52,6 +52,8 @@ package
 		
 		private function _onTimerEvent(e:TimerEvent):void 
 		{
+			_initialTimer.removeEventListener(TimerEvent.TIMER, this._onTimerEvent);
+			_initialTimer.stop();
 			_initialTimer = null;
 			FP.world = new TitleScreen();			
 		}

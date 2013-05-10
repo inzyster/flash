@@ -77,6 +77,9 @@
 		Flash.onFlashLoaded = function(loaded) {
 			if (!!loaded)
 			{
+				var attr = Flash.getAttributes();
+				var f = document.getElementById(attr.id);
+				f.focus && f.focus();
 			}
 		};
 		
@@ -96,11 +99,14 @@
 	</div>
 	<script type="text/javascript">
 	var s = Flash.getSize();
+	var id = (Flash.getAttributes()).id;
 		swfobject.embedSWF(
 			"AmSpiders.swf", 
 			"altContent", s.width, s.height, "10.0.0", 
 			"expressInstall.swf", 
 			Flash.getFlashvars(), Flash.getParams(), Flash.getAttributes());
+	var f = document.getElementById(id);
+	f.focus && f.focus();
 	</script>
 </body>
 </html>

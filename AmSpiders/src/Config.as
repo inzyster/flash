@@ -56,7 +56,7 @@ package
 		
 		public static function get FontSize():int 
 		{
-			return 20;
+			return Math.min(_Width / MainWorld.COLUMNS, _Height / MainWorld.ROWS);
 		}
 		
 		public static function setContainerSize(width:int, height:int):void
@@ -87,7 +87,7 @@ package
 				_ContainerWidth = _Width;
 				_ContainerHeight = _Height;
 			}
-			_RefreshRate = 60;
+			_RefreshRate = 24;
 			_DefaultBackground = 0x202020;
 		}
 		

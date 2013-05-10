@@ -15,8 +15,8 @@ package
 	public class MainWorld extends World
 	{
 				
-		private static const COLUMNS:int = 40;
-		private static const ROWS:int = 30;
+		public static const COLUMNS:int = 40;
+		public static const ROWS:int = 30;
 		
 		private static var _columnWidth:int = 0;
 		private static var _columnHeight:int = 0;
@@ -52,8 +52,12 @@ package
 			scanlines.scanLinesThickness = 1.0;
 			scanlines.noiseSeed = -1;
 			scanlines.scanLinesOffset = 0.0;
-			scanlines.noiseAmount = 5.0;
-			FXMan.add(_fxImage, scanlines);
+			scanlines.noiseAmount = 0.0;
+			
+			var posterize:PosterizeFX = new PosterizeFX(16, 0xff005900);
+			var crt:CRTFX = new CRTFX(0.2);
+			
+			FXMan.add(_fxImage, [crt, posterize, scanlines]);
 			
 			this.addGraphic(_fxImage, -3);
 		}

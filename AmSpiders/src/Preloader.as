@@ -171,6 +171,7 @@ package
 					onFinished: function():void {
 						self.removeChild(_logo);
 						_logo = null;
+						self.filters = null;
 					}
 				}, {
 					target: main,
