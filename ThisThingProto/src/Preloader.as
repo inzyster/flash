@@ -38,7 +38,7 @@ package
 		
 		public function Preloader():void
 		{
-			if (ExternalInterface.available)
+			if (ExternalInterface.available && Config.JSEnabled)
 			{
 				ExternalInterface.call("Flash.onFlashLoaded", true);
 			}						

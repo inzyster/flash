@@ -19,13 +19,8 @@ package
 	{
 		
 		[Embed(source = "../pbj/warp.pbj", mimeType = "application/octet-stream")]
-		private var _shader_data:Class;
-		
-		[Embed(source = "../img/mask.png")]
-		private var _mask:Class;
-		
-		private var _maskData:BitmapData;
-		
+		private var SHADER_DATA:Class;
+				
 		public var amount:Number;		
 		
 		public function CRTFX(amount:Number) 
@@ -33,13 +28,8 @@ package
 			super();
 			
 			this.amount = amount;
-			
-			var maskImg:Image = new Image(_mask);
-			_maskData = new BitmapData(maskImg.width, maskImg.height, true, 0x0);
-			maskImg.render(_maskData, new Point(0, 0), new Point(0, 0));
-		
-			
-			this.shader = new Shader(new _shader_data());
+						
+			this.shader = new Shader(new SHADER_DATA());
 			this.filter = new ShaderFilter(this.shader);			
 			
 		}
@@ -51,9 +41,8 @@ package
 				clipRect = bitmapData.rect;
 			}
 			
-			this.shader.data["amount"].value[0] = this.amount;
-			this.shader.data["inputSize"].value[0] = clipRect.width;
-			this.shader.data["inputSize"].value[1] = clipRect.height;
+			this.shader.data["amount"].value = [this.amount];
+			this.shader.data["inputSize"].value = [clipRect.width, clipRect.height];
 			
 			super.applyTo(bitmapData, clipRect);
 		}

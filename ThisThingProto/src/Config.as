@@ -19,6 +19,8 @@ package
 		
 		private static var _DefaultBackground:uint;
 		
+		public static var JSEnabled:Boolean = false;
+		
 		public static function get Width():int
 		{
 			return _Width;
@@ -77,7 +79,7 @@ package
 				_ContainerWidth = _Width;
 				_ContainerHeight = _Height;
 			}
-			_RefreshRate = 60;
+			_RefreshRate = 50;
 			_DefaultBackground = 0x202020;
 		}
 		
