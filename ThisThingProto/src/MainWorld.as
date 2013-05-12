@@ -11,6 +11,7 @@ package
 	import flash.text.TextFormat;
 	import flash.text.TextFormatAlign;
 	import flash.utils.Timer;
+	import mx.modules.ModuleManager;
 	import net.flashpunk.FP;
 	import net.flashpunk.graphics.Backdrop;
 	import net.flashpunk.graphics.Text;
@@ -44,6 +45,9 @@ package
 		
 		private var _distance:Number;
 		private var _distanceLabel:Text;
+		
+		private var _manliness:uint;
+		private var _manlinessLabel:Text;
 		
 		private var _accelerationCounter:int = 200;
 		
@@ -113,7 +117,8 @@ package
 			_vin.y = this.groundLevel - _vin.height;
 			this.add(_vin);
 			
-			_distance = 0.0;			
+			_distance = 0.0;		
+			_manliness = 0;
 
 			_distanceLabel = new Text("Distance: 0px", 0.0, 0.0, { 
 				font: "default",
@@ -121,15 +126,25 @@ package
 				align: "right",
 				resizable: false,
 				width: Config.Width
-				} );
+			});
 				
 			_distanceLabel.scrollX = 0.0;
 				
+			_manlinessLabel = new Text("Manliness: 0", 0.0, 20.0, {
+				font: "default",
+				size: 20,
+				align: "right",
+				resizable: false,
+				width: Config.Width
+			});
+			
+			_manlinessLabel.scrollX = 0.0;
+			
 			this.addGraphic(_distanceLabel);
+			this.addGraphic(_manlinessLabel);
 			
 			_pauseTimer.addEventListener(TimerEvent.TIMER, _onPauseTimerComplete);
-			_pauseTimer.start();
-			
+			_pauseTimer.start();			
 			
 		}
 		
@@ -150,8 +165,26 @@ package
 			
 			_distance = _vin.x - _followOffset;
 			_distanceLabel.text = "Distance: " + Math.round(_distance) + "px";
+			_manlinessLabel.text = "Manliness: " + _manliness;
 			
 			this.camera.x = _vin.x - _followOffset;
+			
+			var collisionData:Array = [];
+		
+			_vin.collideInto("Dumbbell", _vin.x, _vin.y, collisionData);
+			
+			if (collisionData.length > 0)
+			{
+				for (var i:int = 0; i < collisionData.length; i++)
+				{
+					var e:* = collisionData[i];
+					if (e is Dumbbell)
+					{
+						_manliness++;
+						this.remove(e as Dumbbell);
+					}
+				}
+			}
 			
 		}
 		

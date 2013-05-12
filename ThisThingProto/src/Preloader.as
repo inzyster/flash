@@ -36,6 +36,8 @@ package
 		private var _xOffset:Number;
 		private var _yOffset:Number;
 		
+		private var _logoWidth:Number;
+		
 		public function Preloader():void
 		{
 			if (ExternalInterface.available && Config.JSEnabled)
@@ -76,6 +78,7 @@ package
 			
 			this.addChild(_logo);
 			_logo.alpha = 0.0;
+			_logoWidth = _logo.width;
 			
 			this.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 			this.loaderInfo.addEventListener(ProgressEvent.PROGRESS, onProgress);
