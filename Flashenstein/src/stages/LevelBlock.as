@@ -13,12 +13,19 @@ package stages
 		public var y:int;		
 		public var type:int;
 		
-		public function LevelBlock(x:int = 0, y:int = 0, wall:int = 0, type:int = LevelBlockType.DEFAULT) 
+		public function LevelBlock(x:int = 0, y:int = 0, wall:int = 0, type:int = 0) 
 		{
 			this.x = x;
 			this.y = y;
 			this.wall = wall;
-			this.type = type;
+			if (type == 0)
+			{
+				this.type = LevelBlockType.DEFAULT;
+			}
+			else 
+			{
+				this.type = type;
+			}
 		}
 		
 		public function isStart():Boolean

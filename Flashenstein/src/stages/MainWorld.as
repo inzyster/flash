@@ -4,6 +4,7 @@ package stages
 	import flash.display.BitmapData;
 	import flash.display.BlendMode;
 	import flash.geom.Matrix;
+	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import net.flashpunk.graphics.Backdrop;
 	import net.flashpunk.graphics.Image;
@@ -35,12 +36,16 @@ package stages
 		
 		private var _textures:Vector.<BitmapData>;
 		
-		private var _x:int;
-		private var _y:int;
+		private var _x:Number;
+		private var _y:Number;
 		private var _direction:Number;
 		
 		private var _wallData:BitmapData;
 		private var _wallImage:Image;
+		
+		private var _level:Level;
+		
+		private var _needsUpdate:Boolean;
 		
 		public function MainWorld() 
 		{
@@ -51,7 +56,7 @@ package stages
 		{
 			super.begin();	
 			
-			_turningSpeed = (Math.PI / 180.0) * 1.0;
+			_turningSpeed = (Math.PI / 180.0) * 2.0;
 			
 			_textures = new Vector.<BitmapData>();
 			
@@ -86,17 +91,17 @@ package stages
 			
 			var levelStringBuilder:StringBuffer = new StringBuffer();
 			levelStringBuilder.add("2222222222\n");
-			levelStringBuilder.add("20202000S2\n");
-			levelStringBuilder.add("2020000002\n");
+			levelStringBuilder.add("20201000S2\n");
+			levelStringBuilder.add("2010000002\n");
 			levelStringBuilder.add("2000000002\n");
-			levelStringBuilder.add("2222222222");
+			levelStringBuilder.add("2222233322");
 			
-			var level:Level = Level.FromString(levelStringBuilder.toString());
+			_level = Level.FromString(levelStringBuilder.toString());
 						
-			var startRoom:LevelBlock = level.startBlock();
+			var startRoom:LevelBlock = _level.startBlock();
 
-			_x = startRoom.x * ROOM_SIZE / 2;
-			_y = startRoom.y * ROOM_SIZE / 2;
+			_x = (startRoom.x * ROOM_SIZE) + (ROOM_SIZE / 2);
+			_y = (startRoom.y * ROOM_SIZE) + (ROOM_SIZE / 2);
 			
 			_direction = 0.0;
 			
@@ -105,19 +110,22 @@ package stages
 			_wallImage = new Image(_wallData);
 			this.addGraphic(_wallImage);
 			
+			_needsUpdate = true;
 		}
 		
 		override public function update():void
 		{
-			super.update();
+			super.update();			
 			
 			if (Input.check(Key.LEFT))
 			{
 				_direction -= _turningSpeed;
+				_needsUpdate = true;
 			}
 			else if (Input.check(Key.RIGHT))
 			{
 				_direction += _turningSpeed;
+				_needsUpdate = true;
 			}			
 			
 			if (_direction < 0.0)
@@ -128,14 +136,58 @@ package stages
 			{
 				_direction -= 2.0 * Math.PI;
 			}
-						
-			for (var x:int = 0; x < Config.WIDTH; x++)
+			
+			var rayStep:Number = FOV / Config.WIDTH;
+			
+			var distStep:Number = 1.0;
+			
+			if (_needsUpdate)
 			{
+				_wallData.fillRect(_wallData.rect, 0x0);
+				
+				for (var x:int = 0; x < Config.WIDTH; x++)
+				{
+					var wall:int = 0;
+					var rayAngle:Number = (-FOV / 2.0) + (rayStep * Number(x)) + _direction;
+					var wallHit:Boolean = false;
+					var distance:Number = 0.0;
+					var currentX:Number = _x + distance * Math.sin(rayAngle);
+					var currentY:Number = _y + distance * Math.cos(rayAngle);
+					while (!wallHit)
+					{
+						currentX = _x + distance * Math.sin(rayAngle);
+						currentY = _y - distance * Math.cos(rayAngle);
+						
+						var tileX:int = Math.floor(currentX / ROOM_SIZE);
+						var tileY:int = Math.floor(currentY / ROOM_SIZE);
+						
+						var checkedRoom:LevelBlock = _level.getBlockAt(tileX, tileY);
+						if (checkedRoom.wall > 0)
+						{
+							wallHit = true;		
+							wall = checkedRoom.wall;
+							break;
+						}
+						
+						distance += distStep;
+					}
+					var texture:BitmapData = _textures[wall];
+					var currentPos:Point = new Point(_x, _y);
+					var tracedPos:Point = new Point(currentX, currentY);
+					var dist:Number = Point.distance(tracedPos, currentPos);
+					var height:Number = Config.HEIGHT / dist;
+					var matrix:Matrix = new Matrix();
+					matrix.ty = -height / 2.0;
+					matrix.scale(1.0, height / TEXTURE_SIZE);
+					var bd:BitmapData = new BitmapData(1, height, false);
+					bd.draw(texture, matrix, null, BlendMode.NORMAL, new Rectangle(0, 0, 1, TEXTURE_SIZE), false);
+					_wallData.copyPixels(bd, new Rectangle(0, 0, 1, height), new Point(x, (Config.HEIGHT - height) / 2), null, null, false);
+				}
+				
+				_wallImage.updateBuffer();
 				
 			}
-			
-			_wallImage.updateBuffer();
-			
+			_needsUpdate = false;
 		}
 		
 	}
