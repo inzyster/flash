@@ -51,6 +51,8 @@ package
 		
 		private var _accelerationCounter:int = 200;
 		
+		private var _trinketTimer:Timer;
+		
 		public function MainWorld() 
 		{
 			
@@ -145,7 +147,87 @@ package
 			
 			_pauseTimer.addEventListener(TimerEvent.TIMER, _onPauseTimerComplete);
 			_pauseTimer.start();			
+
+			_startTrinketTimer();
 			
+		}
+		
+		private function _startTrinketTimer():void
+		{
+			if (_trinketTimer != null)
+			{
+				return;
+			}
+			_trinketTimer = new Timer(Math.random() * 2000.0 + 4000.0);
+			_trinketTimer.addEventListener(TimerEvent.TIMER, _onTrinketTimer);
+			_trinketTimer.start();
+		}
+		
+		private function _generateTrinkets():void
+		{
+			var startingX:Number = this.camera.x;
+			var rnd:int = Math.round(Math.random() * 10.0);
+			var x:Number = this.camera.x + Config.Width;
+			var p:Number = 0.0;
+			var i:int = 0;
+			var d:Dumbbell = null;
+			if (rnd < 5)
+			{
+				for (i = 0; i < 10; i++)
+				{
+					d = new Dumbbell(true, p);
+					d.x = x;
+					d.y = this.groundLevel - (d.height * 2.0);
+					
+					this.add(d);
+					
+					x += d.width + 4.0;
+					p += 0.4;
+				}
+			}
+			else if (rnd < 9)
+			{
+				for (i = 0; i < 10; i++)
+				{
+					d = new Dumbbell(true, p);
+					d.x = x;
+					d.y = Config.Height / 2.0 + (d.height * 2.0);
+					
+					this.add(d);
+					
+					x += d.width + 4.0;
+					p += 0.2;
+				}
+			}
+			else
+			{
+				var yOffset:Number = 0;
+				for (var j:int = 0; j < 4; j++)
+				{
+					for (i = 0; i < 10; i++)
+					{
+						d = new Dumbbell(false);
+						d.x = x;
+						d.y = this.groundLevel - (d.height * 2.0) - yOffset;
+						
+						this.add(d);
+						x += d.width + 4.0;
+					}
+					x = this.camera.x + Config.Width;
+					yOffset += (d.height + 4.0);
+				}
+			}
+		}
+		
+		private function _onTrinketTimer(e:TimerEvent):void
+		{
+			_trinketTimer.removeEventListener(TimerEvent.TIMER, _onTrinketTimer);
+			_trinketTimer.stop();
+			_trinketTimer = null;
+			
+			_generateTrinkets();
+			
+			_startTrinketTimer();
 		}
 		
 		override public function update():void

@@ -22,7 +22,7 @@ package stages
 	
 		private const TEXTURE_SIZE:int = 64;
 		
-		private const ROOM_SIZE:int = 20;
+		private const ROOM_SIZE:int = 64;
 		
 		private const FOV:Number = Math.PI / 2.0;
 		
@@ -148,24 +148,36 @@ package stages
 				for (var x:int = 0; x < Config.WIDTH; x++)
 				{
 					var wall:int = 0;
-					var rayAngle:Number = (-FOV / 2.0) + (rayStep * Number(x)) + _direction;
+					var rayAngle:Number = ( -FOV / 2.0) + (rayStep * Number(x)) + _direction;
 					var wallHit:Boolean = false;
 					var distance:Number = 0.0;
-					var currentX:Number = _x + distance * Math.sin(rayAngle);
-					var currentY:Number = _y + distance * Math.cos(rayAngle);
+					var currentX:Number = _x + distance * Math.cos(rayAngle);
+					var currentY:Number = _y + distance * Math.sin(rayAngle);
+					var side:Boolean = false;
+					var dist:Number = 128.0;
+					var tileX:int = -1;
+					var tileY:int = -1;
+					distStep = Math.sqrt((ROOM_SIZE * Math.cos(rayAngle) * ROOM_SIZE * Math.cos(rayAngle)) + (ROOM_SIZE * Math.sin(rayAngle) * ROOM_SIZE * Math.sin(rayAngle)));
 					while (!wallHit)
 					{
 						currentX = _x + distance * Math.sin(rayAngle);
 						currentY = _y - distance * Math.cos(rayAngle);
 						
-						var tileX:int = Math.floor(currentX / ROOM_SIZE);
-						var tileY:int = Math.floor(currentY / ROOM_SIZE);
+						tileX = Math.floor(currentX / ROOM_SIZE);
+						tileY = Math.floor(currentY / ROOM_SIZE);
 						
 						var checkedRoom:LevelBlock = _level.getBlockAt(tileX, tileY);
 						if (checkedRoom.wall > 0)
 						{
 							wallHit = true;		
 							wall = checkedRoom.wall;
+							var traceP:Point = new Point(currentX, currentY);
+							var currentP:Point = new Point(_x, _y);
+							var p:Point = traceP.subtract(currentP);
+							p.y = -p.y;
+							var tg:Number = p.y / p.x;
+							var alpha:Number = Math.atan(tg);
+							side = ((Math.abs(alpha) <= Math.PI / 4.0) || (Math.abs(alpha) >= 3.0 * Math.PI / 4.0));
 							break;
 						}
 						
@@ -174,13 +186,21 @@ package stages
 					var texture:BitmapData = _textures[wall];
 					var currentPos:Point = new Point(_x, _y);
 					var tracedPos:Point = new Point(currentX, currentY);
-					var dist:Number = Point.distance(tracedPos, currentPos);
-					var height:Number = Config.HEIGHT / dist;
+					var edgePos:Point = null;
+					if (!side)
+					{
+						edgePos = new Point((tileX * ROOM_SIZE) + (ROOM_SIZE / 2), (tileY * ROOM_SIZE) + ROOM_SIZE);
+					}
+					else 
+					{
+						edgePos = new Point(tileX * ROOM_SIZE, (tileY * ROOM_SIZE) + (ROOM_SIZE / 2));						
+					}
+					dist = Point.distance(currentPos, edgePos);
+					var height:Number = Math.floor(Config.HEIGHT / Math.abs(dist / 16.0));
 					var matrix:Matrix = new Matrix();
-					matrix.ty = -height / 2.0;
 					matrix.scale(1.0, height / TEXTURE_SIZE);
-					var bd:BitmapData = new BitmapData(1, height, false);
-					bd.draw(texture, matrix, null, BlendMode.NORMAL, new Rectangle(0, 0, 1, TEXTURE_SIZE), false);
+					var bd:BitmapData = new BitmapData(TEXTURE_SIZE, height, false);
+					bd.draw(texture, matrix, null, BlendMode.NORMAL, new Rectangle(0, 0, 1, height), false);
 					_wallData.copyPixels(bd, new Rectangle(0, 0, 1, height), new Point(x, (Config.HEIGHT - height) / 2), null, null, false);
 				}
 				

@@ -18,10 +18,11 @@ package
 		private var _phase:Number;
 		
 		private var _animated:Boolean;
+		private var _shouldAnimate:Boolean;
 		
 		private var _startingY:Number;
 		
-		public function Dumbbell(startingPhase:Number = 0.0) 
+		public function Dumbbell(shouldAnimate:Boolean = true, startingPhase:Number = 0.0) 
 		{
 			this.graphic = new FXSpritemap(DUMBBELL_DATA, 32, 32);
 			FXSpritemap(this.graphic).add("Idle", [0]);
@@ -29,6 +30,7 @@ package
 			
 			this.type = "Dumbbell";
 			
+			_shouldAnimate = shouldAnimate;
 			_phase = startingPhase;
 			_animated = false;
 			
@@ -38,7 +40,7 @@ package
 		override public function added():void
 		{
 			_startingY = this.y;
-			_animated = true;
+			_animated = _shouldAnimate;
 		}
 		
 		override public function removed():void

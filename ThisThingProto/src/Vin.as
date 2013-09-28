@@ -97,7 +97,7 @@ package
 				if (this.isOnGround() && !_jumping)
 				{
 					_jumping = true;
-					this.acceleration.y = 10000.0;
+					this.acceleration.y = 5000.0;
 				}
 			}
 		}

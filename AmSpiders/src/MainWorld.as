@@ -28,12 +28,17 @@ package
 		
 		private static var _fxImage:FXImage;
 		
+		public function getWorldPointAtCoords(column:int, row:int, trackCamera:Boolean = false):Point
+		{
+			return new Point((column * _columnWidth) + (trackCamera ? this.camera.x : 0), (row * _columnHeight) + (trackCamera ? this.camera.y : 0));
+		}
+		
 		public function getWorldPoint(point:Point, trackCamera:Boolean = false):Point
 		{
 			var column:Number = Math.floor(point.x / _columnWidth);
 			var row:Number = Math.floor(point.y / _columnHeight);
 			
-			return new Point((column * _columnWidth) + (trackCamera ? this.camera.x : 0), (row * _columnHeight) + (trackCamera ? this.camera.y : 0));
+			return this.getWorldPointAtCoords(column, row, trackCamera);
 		}
 		
 		public function MainWorld() 

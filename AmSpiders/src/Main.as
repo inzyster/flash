@@ -3,6 +3,7 @@ package
 	
 	import flash.events.TimerEvent;
 	import flash.system.System;
+	import flash.utils.getDefinitionByName;
 	import flash.utils.Timer;
 	import net.flashpunk.Engine;
 	import net.flashpunk.FP;
@@ -46,7 +47,16 @@ package
 			
 			if (Input.check(Key.ESCAPE))
 			{
-				System.exit(1);
+				if (CONFIG::desktop == true)
+				{
+					var na:Class = getDefinitionByName("flash.desktop.NativeApplication") as Class;
+					var a:* = na["nativeApplication"];
+					a.exit(1);
+				}
+				else 
+				{
+					System.exit(1);
+				}
 			}
 		}
 		

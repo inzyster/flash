@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<application xmlns="http://ns.adobe.com/air/application/3.7">
+  <id>AIRTest1</id>
+  <versionNumber>1.0</versionNumber>
+  <filename>AIRTest1</filename>
+  <name>AIRTest1</name>
+  <initialWindow>
+    <title>AIRTest1</title>
+    <content>AIRTest1.swf</content>
+    <systemChrome>standard</systemChrome>
+    <transparent>false</transparent>
+    <visible>true</visible>
+    <minimizable>true</minimizable>
+    <minSize>960 640</minSize>
+    <renderMode>direct</renderMode>
+    <maxSize>960 640</maxSize>
+    <aspectRatio>landscape</aspectRatio>
+  </initialWindow>
+  <supportedProfiles>extendedDesktop</supportedProfiles>
+  <!-- 
+	More options:
+	http://livedocs.adobe.com/flex/3/html/File_formats_1.html#1043413
+	-->
+  <extensions>
+    <extensionID>extension.JoyQuery.Joystick</extensionID>
+  </extensions>
+</application>
