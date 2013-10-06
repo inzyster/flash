@@ -1,6 +1,8 @@
 package 
 {
 	import flash.display.Sprite;
+	import flash.display.StageDisplayState;
+	import flash.display.StageScaleMode;
 	import flash.events.Event;
 	import net.flashpunk.World;
 
@@ -30,6 +32,13 @@ package
 			FP.world = new World();
 		}
 
+		override public function init():void
+		{
+			super.init();
+			this.stage.scaleMode = StageScaleMode.SHOW_ALL;
+			this.stage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
+		}
+		
 	}
 
 }

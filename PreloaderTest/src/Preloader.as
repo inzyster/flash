@@ -5,6 +5,7 @@ package
 	import flash.display.Shader;
 	import flash.display.Shape;
 	import flash.display.StageAlign;
+	import flash.display.StageDisplayState;
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
@@ -24,7 +25,8 @@ package
 		public function Preloader() 
 		{
 			if (stage) {
-				stage.scaleMode = StageScaleMode.NO_SCALE;
+				stage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
+				stage.scaleMode = StageScaleMode.SHOW_ALL;
 				stage.align = StageAlign.TOP_LEFT;
 			}
 			addEventListener(Event.ENTER_FRAME, checkFrame);
