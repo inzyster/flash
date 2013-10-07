@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <data>
 	<items>
-		<item id="1" image="item.png" />
+		<item id="1" image="item.png">
+			<label>David Cage</label>
+			<description>
+				David Cage in brick form. 12 polygons, all the emotions.
+			</description>
+			<properties>
+				<property>
+					<key>KEY_1</key>
+					<value>VALUED VALUE OF VALUES</value>
+				</property>
+			</properties>
+		</item>
 	</items>
 	<act id="1" name="YE ACTE ONE">
 		<scene id="1-1">

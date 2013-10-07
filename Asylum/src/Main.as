@@ -19,7 +19,8 @@ package
 		public function Main():void 
 		{
 			super(640, 360, 60, false);
-			FP.console.enable();			
+			FP.console.enable();
+			FP.world = new GameWorld();
 		}
 		
 		override public function init():void 
