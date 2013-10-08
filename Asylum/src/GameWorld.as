@@ -8,9 +8,16 @@ package
 	public class GameWorld extends World
 	{
 		
+		private var _dataXML:XML;
+		
+		public function get dataXML():XML
+		{
+			return _dataXML;
+		}
+		
 		public function GameWorld() 
 		{
-			
+			this._dataXML = Assets.GetXML();
 		}
 		
 		override public function begin():void

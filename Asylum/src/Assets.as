@@ -31,6 +31,12 @@ package
 			return newClass;
 		}
 		
+		public static function GetXML():XML
+		{
+			var result:XML = XML(new AllData());
+			return result;
+		}
+		
 	}
 
 }
