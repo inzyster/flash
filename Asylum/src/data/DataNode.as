@@ -1,5 +1,7 @@
 package data 
 {
+	import flash.errors.IllegalOperationError;
+	import flash.utils.Dictionary;
 	/**
 	 * ...
 	 * @author Wrong Tomato Factory
@@ -9,9 +11,18 @@ package data
 		
 		public var id:String;
 		
-		public function DataNode(id:String) 
+		public var properties:Dictionary;
+		
+		public function DataNode(xmlObject:XML)
 		{
-			this.id = id;
+			this.id = xmlObject["@id"].toString();
+			this.properties = new Dictionary();
+			for each (var property:XML in xmlObject["properties"]["property"])
+			{
+				var key:String = property["key"].toString();
+				var value:String = property["value"].toString();
+				this.properties[key] = value;
+			}
 		}
 		
 	}

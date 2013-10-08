@@ -1,4 +1,4 @@
-package  
+package data
 {
 	import data.ImageNode;
 	/**
@@ -8,10 +8,10 @@ package
 	public class Item extends ImageNode
 	{		
 		
-		public function Item(id:String, imageName:String)
+		public function Item(xmlObject:XML)
 		{
 			this._assetType = AssetType.ITEM;
-			super(id, imageName);
+			super(xmlObject);
 		}
 		
 	}

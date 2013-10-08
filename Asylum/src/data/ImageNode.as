@@ -15,10 +15,10 @@ package data
 		
 		private var _bitmap:BitmapData;
 		
-		public function ImageNode(id:String, imageName:String) 
+		public function ImageNode(xmlObject:XML)
 		{			
-			super(id);
-			this.imageName = imageName;
+			super(xmlObject);			
+			this.imageName = xmlObject["@image"];
 			if (this._assetType != AssetType.UNDEFINED)
 			{
 				this._setBitmap();
