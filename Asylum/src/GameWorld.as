@@ -1,8 +1,11 @@
 package  
 {
 	import data.GameAct;
+	import data.GameScene;
 	import data.ItemsCatalog;
+	import data.Room;
 	import flash.utils.Dictionary;
+	import net.flashpunk.graphics.Backdrop;
 	import net.flashpunk.World;
 	import data.Item;
 	/**
@@ -51,12 +54,19 @@ package
 				this._acts[act.id] = act;
 				this._actsOrder.push(act.id);
 			}
-			trace(this.currentAct);
+			
 		}
 		
 		override public function begin():void
 		{
 			super.begin();
+			
+			var currentScene:GameScene = this.currentAct.currentScene;
+			var currentRoom:Room = currentScene.currentRoom;
+			
+			var backdrop:Backdrop = new Backdrop(currentRoom.bitmap, false, false);
+			
+			this.addGraphic(backdrop);
 		}
 		
 		override public function update():void
