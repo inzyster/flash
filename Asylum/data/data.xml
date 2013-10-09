@@ -18,9 +18,10 @@
 		<act id="1" name="YE ACTE ONE">
 			<scene id="1-1">
 				<entrance>
-					<dialogue>
+					<transition type="FADE" duration="1.5" />
+					<narration>
 						You enter a room. It sure looks like one. There are walls and shit. Made out of stuff... whatever the hell walls are made of. Wall pasta. Yeah, let's go with that.
-					</dialogue>
+					</narration>
 				</entrance>
 				<room id="1" image="room-1.png">				
 								
