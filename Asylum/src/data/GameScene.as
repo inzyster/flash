@@ -15,6 +15,10 @@ package data
 		private var _entranceTransition:SceneTransition;
 		private var _exitTransition:SceneTransition;		
 		
+		private var _sceneState:int = SceneState.TRANSITIONING_IN;
+		
+		private var _sceneTime:Number = 0.0;
+		
 		public function get rooms():Dictionary
 		{
 			return _rooms;
@@ -33,6 +37,11 @@ package data
 		public function get exitTransition():SceneTransition
 		{
 			return _exitTransition;
+		}
+		
+		public function get sceneState():int
+		{
+			return _sceneState;
 		}
 		
 		public function GameScene(xmlObject:XML)
@@ -61,6 +70,41 @@ package data
 				this._roomIndices.push(room.id);
 			}			
 			
+		}
+		
+		override public function update(frameTime:Number):void
+		{
+			super.update(frameTime);
+			this._sceneTime += frameTime;
+			if (this._sceneState == SceneState.TRANSITIONING_IN)
+			{
+				if (this._entranceTransition != null)
+				{
+					if (this._sceneTime >= this._entranceTransition.duration)
+					{
+						if (this._entranceTransition.narration != null)
+						{
+							this._sceneState = SceneState.ENTRANCE_DIALOG;
+						}
+						else 
+						{
+							this._sceneState = SceneState.ACTIVE;
+						}
+					}
+				}
+				else
+				{
+					this._sceneState = SceneState.ACTIVE;
+				}
+			}
+		}
+		
+		private function dialogDismissed(e:DialogDismissedEvent):void
+		{
+			if (this._sceneState == SceneState.ENTRANCE_DIALOG)
+			{
+				this._sceneState = SceneState.ACTIVE;
+			}
 		}
 		
 	}

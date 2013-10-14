@@ -1,12 +1,13 @@
 package data 
 {
-	import flash.errors.IllegalOperationError;
+	import flash.events.EventDispatcher;
+	import flash.events.IEventDispatcher;
 	import flash.utils.Dictionary;
 	/**
 	 * ...
 	 * @author Wrong Tomato Factory
 	 */
-	public class DataNode
+	public class DataNode extends EventDispatcher
 	{
 		
 		public var id:String;
@@ -23,6 +24,11 @@ package data
 				var value:String = property["value"].toString();
 				this.properties[key] = value;
 			}
+		}
+		
+		public function update(frameTime:Number):void
+		{
+			
 		}
 		
 	}

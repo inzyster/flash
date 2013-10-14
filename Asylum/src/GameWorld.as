@@ -4,8 +4,12 @@ package
 	import data.GameScene;
 	import data.ItemsCatalog;
 	import data.Room;
+	import data.SceneState;
 	import flash.utils.Dictionary;
+	import net.flashpunk.Entity;
+	import net.flashpunk.FP;
 	import net.flashpunk.graphics.Backdrop;
+	import net.flashpunk.graphics.Stamp;
 	import net.flashpunk.World;
 	import data.Item;
 	/**
@@ -15,6 +19,8 @@ package
 	public class GameWorld extends World
 	{
 		
+		private var _gameState:int = GameState.DEFAULT;
+		
 		private var _dataXML:XML;
 		
 		private var _itemsCatalog:ItemsCatalog;
@@ -22,6 +28,9 @@ package
 		private var _acts:Dictionary;
 		private var _actsOrder:Array;
 		private var _currentActIndex:uint;
+		
+		private var _background:Backdrop;
+		private var _roomImage:Backdrop;
 		
 		public function get dataXML():XML
 		{
@@ -54,24 +63,24 @@ package
 				this._acts[act.id] = act;
 				this._actsOrder.push(act.id);
 			}
-			
 		}
 		
 		override public function begin():void
 		{
 			super.begin();
 			
-			var currentScene:GameScene = this.currentAct.currentScene;
-			var currentRoom:Room = currentScene.currentRoom;
-			
-			var backdrop:Backdrop = new Backdrop(currentRoom.bitmap, false, false);
-			
-			this.addGraphic(backdrop);
 		}
 		
 		override public function update():void
-		{
+		{			
+			var frameTime:Number = FP.elapsed;			
 			super.update();
+			
+			var currentScene:GameScene = this.currentAct.currentScene;
+			
+			if (currentScene.sceneState == SceneState.TRANSITIONING_IN)
+			{	
+			}
 		}
 		
 	}
