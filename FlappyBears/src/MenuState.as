@@ -15,6 +15,8 @@ package
 		
 		private var _startLabel:FlxText;
 		
+		private var _bear:MainMenuBear;
+		
 		override public function create():void
 		{
 			FlxG.mouse.hide();
@@ -38,6 +40,10 @@ package
 			_startLabel = new FlxText(0.0, (2.0 / 3.0) * FlxG.height, FlxG.width, "Press space to play");
 			_startLabel.alignment = "center";
 			this.add(_startLabel);
+			
+			_bear = new MainMenuBear((FlxG.width - 32) / 2.0, (FlxG.height - 28) / 2.0);
+			this.add(_bear);
+			_bear.alive = true;
 		}
 		
 		override public function update():void
